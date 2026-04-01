@@ -1,65 +1,40 @@
 plugins {
     id 'java'
-    id 'xyz.jpenilla.run-paper' version '2.3.1'   // Local testing only
+    id 'xyz.jpenilla.run-paper' version '2.3.1'
 }
 
-// ── Plugin metadata ───────────────────────────────────────────────────────────
-group   = 'com.loyal0713'
+group = 'com.loyal0713'
 version = '1.0.0'
-def pluginName = 'MyPlugin'          // ← Change per project
-
-// ── Version targeting ─────────────────────────────────────────────────────────
-// Compile against your MINIMUM supported version so the JAR works on older servers.
-// Bukkit/Spigot API is broadly backward-compatible, so a 1.12.2-compiled plugin
-// will load on 1.21.x without issue (you just can't call APIs that didn't exist yet).
-def minApiVersion   = '1.12.2'      // Oldest server you want to support
-def testMcVersion   = '1.21.1'      // MC version used for local runServer
-
-// ── Java bytecode compatibility ───────────────────────────────────────────────
-// Java 8  → works on servers from the 1.12 era onward (pre-1.17 used JDK 8)
-// Java 11 → safe for 1.17+
-// Java 17 → required by 1.17–1.20.4; fine for older JDKs if you don't use J17 APIs
-// Java 21 → required by 1.20.5+; Paper 1.21.x ships with JDK 21
-// Set this to match your minApiVersion era, or override intentionally.
-def javaTarget = JavaVersion.VERSION_1_8
-
-// ─────────────────────────────────────────────────────────────────────────────
 
 repositories {
-    mavenCentral()
-    // Spigot API — available from 1.4.5 onward, the safe choice for broad compat
     maven {
-        name = 'spigotmc-snapshots'
-        url  = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        name = "spigotmc-repo"
+        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
     }
-    // Only needed if you add Paper-specific dependencies
-    // maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
 }
 
 dependencies {
-    // Compile against Spigot API at your minimum version.
-    // Using Paper API here would expose 1.21-only methods that crash on older servers.
-    compileOnly "org.spigotmc:spigot-api:${minApiVersion}-R0.1-SNAPSHOT"
+    compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
 }
 
 java {
-    sourceCompatibility = javaTarget
-    targetCompatibility = javaTarget
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-jar {
-    archiveBaseName = pluginName
-    archiveVersion  = ''            // Remove version suffix from filename (optional)
-}
-
-// Inject version into plugin.yml at build time
-processResources {
-    filesMatching('plugin.yml') {
-        expand([version: version])
-    }
-}
-
-// Local Paper server for quick testing — uses latest MC regardless of minApiVersion
 tasks.runServer {
-    minecraftVersion(testMcVersion)
+    minecraftVersion("1.21.1")
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
 }
