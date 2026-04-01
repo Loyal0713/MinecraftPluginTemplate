@@ -1,0 +1,22 @@
+# ── MyPlugin Configuration ───────────────────────────────────────────────────
+# Changes take effect after /myplugin reload (or server restart).
+
+# Boolean toggle example
+enabled: true
+
+# Integer example
+cooldown-seconds: 30
+
+# String example
+message: "&aHello, %player%!"
+
+# List example
+worlds:
+  - world
+  - world_nether
+
+# Section (nested values) example
+rewards:
+  enabled: true
+  amount: 100
+  item: DIAMOND

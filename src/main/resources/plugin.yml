@@ -1,0 +1,16 @@
+name: MyPlugin
+version: ${version}
+main: com.loyal0713.myplugin.MyPlugin
+description: A Minecraft plugin
+author: Loyal0713
+api-version: '1.13'
+
+commands:
+#  myplugin:
+#    description: Main command
+#    usage: /<command>
+
+#permissions:
+#  myplugin.use:
+#    description: Allows use of /myplugin
+#    default: op
